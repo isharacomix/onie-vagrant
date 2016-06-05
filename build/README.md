@@ -21,14 +21,13 @@ IN VIRTUALBOX
 
 IN
 VBoxManage list vms
-vagrant package --base 79c8880e-ca9d-4245-a8f4-07964ac4c24e --output onie.box
+vagrant package --base 3679cde6-5761-41f0-bcfc-36280dbf15ba --output onie.box
 vagrant box add onie.box --name onie
 nano ~/.vagrant.d/boxes/onie/0/virtualbox/Vagrantfile
 
 # include these defaults
     config.ssh.username = "root"
     config.ssh.shell = "sh"
-    config.ssh.sudo_command = "%c"
 
 
 
