@@ -1,10 +1,10 @@
 To build the onie image:
 
-sudo apt-get install bison flex build-essential realpath stgit autoconf gperf texinfo libtool ncurses-dev python-dev expat xorriso mtools
-git clone https://github.com/opencomputeproject/onie
-git config --global user.email "ishara@isharacomix.org"
-git config --global user.name "Barry Peddycord III"
-nano  onie/rootconf/default/bin/discover
+    sudo apt-get install bison flex build-essential realpath stgit autoconf gperf texinfo libtool ncurses-dev python-dev expat xorriso mtools libtool-bin
+    git clone https://github.com/opencomputeproject/onie
+    git config --global user.email "ishara@isharacomix.org"
+    git config --global user.name "Barry Peddycord III"
+    nano  onie/rootconf/default/bin/discover
 
 # DHCPv4 service discovery
 sd_dhcp4()
