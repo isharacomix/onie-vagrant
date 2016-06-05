@@ -1,0 +1,10 @@
+# Here we statically assign DHCP entries according to the eth0 mac addresses of
+# our devices.
+#
+host leaf01 {
+  hardware ethernet a0:00:00:00:00:11;
+  fixed-address 192.168.0.11;
+  option host-name "leaf01";
+  option default-url ="http://192.168.0.254/onie-installer";
+  option cumulus-provision-url ="http://192.168.0.254/ztp.sh";
+}

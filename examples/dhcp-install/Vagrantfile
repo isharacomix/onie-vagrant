@@ -1,0 +1,57 @@
+# This Vagrantfile brings up a webserver and an ONIE VM to demonstrate ONIE
+# installation via DHCP.
+Vagrant.configure("2") do |config|
+    config.vm.provider "virtualbox" do |v|
+        v.gui=false
+    end
+
+
+    # Configure the out of band management server.
+    config.vm.define "mgmtserver" do |device|
+        device.vm.hostname = "mgmtserver"
+        device.vm.box = "boxcutter/ubuntu1404"
+        device.vm.synced_folder ".", "/vagrant", disabled: true
+        device.vm.provider "virtualbox" do |v|
+          v.name = "mgmtserver"
+          v.memory = 1024
+        end
+
+        # Ubuntu config.
+        device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
+        device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
+        # Network definitions
+        device.vm.network "private_network", virtualbox__intnet: "oobnet", auto_config: false , :mac => "443839000001"
+
+        # NIC configuration - ensure that all devices other than 1 are promiscuous.
+        device.vm.provider "virtualbox" do |vbox|
+          vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+          vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+        end
+      end
+
+
+
+    # This defines the first switch: leaf01
+    config.vm.define "leaf01" do |device|
+        device.vm.box = "isharacomix/onie"
+        device.vm.synced_folder ".", "/vagrant", disabled: true
+        config.ssh.insert_key = false
+
+        device.vm.provider "virtualbox" do |vbox|
+            vbox.name = "leaf01"
+            vbox.memory = 1024
+            vbox.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
+            vbox.customize ["modifyvm", :id, "--uartmode1", "tcpserver", "40011"]
+        end
+
+        # Network definitions
+        device.vm.network "private_network", virtualbox__intnet: "oobnet", auto_config: false , :mac => "A00000000011"
+
+        # NIC configuration - ensure that all devices other than 1 are promiscuous.
+        device.vm.provider "virtualbox" do |vbox|
+            vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+            vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+        end
+    end
+end

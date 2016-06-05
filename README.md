@@ -32,6 +32,7 @@ and off virtual machines.
     sudo dpkg -i vagrant_1.8.1_x86_64.deb
     vagrant plugin install vagrant-scp
 
+
 Getting an ONIE Installer Image
 -------------------------------
 ### Cumulus VX
