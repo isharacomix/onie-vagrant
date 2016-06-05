@@ -29,6 +29,7 @@ nano ~/.vagrant.d/boxes/onie/0/virtualbox/Vagrantfile
 # include these defaults
     config.ssh.username = "root"
     config.ssh.shell = "sh"
+    config.vm.synced_folder ".", "/vagrant", disabled: true
 
 
 vbox.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]

@@ -1,0 +1,40 @@
+# This Vagrantfile brings up a single ONIE VM
+Vagrant.configure("2") do |config|
+
+    # Don't spin up the GUI for virtualbox
+    config.vm.provider "virtualbox" do |v|
+        v.gui=false
+    end
+
+    # This defines the first switch: leaf01
+    config.vm.define "leaf01" do |device|
+
+        # The source of the box on hashicorp atlas
+        device.vm.box = "isharacomix/onie"
+
+        # Device parameters. The default memory is 1G, which is necessary
+        # to run onie-nos-install
+        device.vm.provider "virtualbox" do |vbox|
+            vbox.name = "leaf01"
+            vbox.memory = 1024
+
+            # If you want to watch ONIE do its thing, you'll need to set up
+            # a serial connection. The arguments here should not be changed,
+            # except for the port number.
+            vbox.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
+            vbox.customize ["modifyvm", :id, "--uartmode1", "tcpserver", "40011"]
+        end
+
+        # When we start building networks, we need to set up the networks
+        # before we can configure the NICs.
+
+        # Set the nictype for the vagrant interface (nic1) explicitly to virtio.
+        device.vm.provider "virtualbox" do |vbox|
+            vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+        end
+
+        ## If you can't run vagrant-scp for some reason, you can uncomment this
+        ## line to copy the file directly. Warning, it's slow!
+        # device.vm.provision "file", source: "./onie-installer", destination: "/root/onie-installer"
+    end
+end
