@@ -16,11 +16,11 @@ Usage
 -----
 You will need two terminals.
 
-*Terminal 1*
+#### Terminal 1
     vagrant up
     telnet localhost 40011
 
-*Terminal 2*
+#### Terminal 2
     vagrant scp onie-installer leaf01:/root/onie-installer
     vagrant ssh leaf01
     onie-nos-install onie-installer
