@@ -5,8 +5,7 @@ To build the onie image:
     git config --global user.email "ishara@isharacomix.org"
     git config --global user.name "Barry Peddycord III"
     cp $ONIEVAGRANTDIR/build/discover $ONIEDIR/rootconf/default/bin/discover
-    cp $ONIEVAGRANTDIR/build/.depend.boot $ONIEDIR/rootconf/default/etc/init.d
-    cp $ONIEVAGRANTDIR/build/.depend.start $ONIEDIR/rootconf/default/etc/init.d
+    cp $ONIEVAGRANTDIR/build/networking.sh $ONIEDIR/rootconf/default/etc/init.d
     cd $ONIEDIR/build-config
     make MACHINE=kvm_x86_64 all
     # this can take as long as three hours
