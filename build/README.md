@@ -5,7 +5,7 @@ To build the onie image:
     git config --global user.email "ishara@isharacomix.org"
     git config --global user.name "Barry Peddycord III"
     cp $ONIEVAGRANTDIR/build/discover $ONIEDIR/rootconf/default/bin/discover
-    cp $ONIEVAGRANTDIR/build/networking.sh $ONIEDIR/rootconf/default/etc/init.d
+    ln -s ../init.d/dropbear.sh $ONIEDIR/rootconf/default/etc/rcS.d/S05dropbear.sh
     cd $ONIEDIR/build-config
     make MACHINE=kvm_x86_64 all
     # this can take as long as three hours
@@ -20,17 +20,11 @@ IN VIRTUALBOX
 
 
 IN
-VBoxManage list vms
-vagrant package --base 3679cde6-5761-41f0-bcfc-36280dbf15ba --output onie.box
-vagrant box add onie.box --name onie
-nano ~/.vagrant.d/boxes/onie/0/virtualbox/Vagrantfile
+    VBoxManage list vms
+    vagrant package --base 6853b0cc-566f-481b-b8d8-a7f0e0f97325 --output onie.box
+    vagrant box add onie.box --name onie
+    nano ~/.vagrant.d/boxes/onie/0/virtualbox/Vagrantfile
 
-# include these defaults
-    config.ssh.username = "root"
-    config.ssh.shell = "sh"
-
-
-
-
-vbox.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
-vbox.customize ["modifyvm", :id, "--uartmode1", "tcpserver", "11111"]
+    # include these defaults
+        config.ssh.username = "root"
+        config.ssh.shell = "sh"

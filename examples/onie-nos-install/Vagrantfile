@@ -36,9 +36,5 @@ Vagrant.configure("2") do |config|
         device.vm.provider "virtualbox" do |vbox|
             vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
         end
-
-        ## If you can't run vagrant-scp for some reason, you can uncomment this
-        ## line to copy the file directly. Warning, it's slow!
-        # device.vm.provision "file", source: "./onie-installer", destination: "/root/onie-installer"
     end
 end
