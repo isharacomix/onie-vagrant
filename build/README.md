@@ -4,38 +4,13 @@ To build the onie image:
     git clone https://github.com/opencomputeproject/onie
     git config --global user.email "ishara@isharacomix.org"
     git config --global user.name "Barry Peddycord III"
-    nano  onie/rootconf/default/bin/discover
-
-# DHCPv4 service discovery
-sd_dhcp4()
-{
-    intf_list=$(net_intf)
-    udhcp_args="$(udhcpc_args) -t 2 -T 2 -n"
-
-    udhcp_request_opts=
-    for o in 7 43 54 66 67 72 114 125 ; do
-        udhcp_request_opts="$udhcp_request_opts -O $o"
-    done
-
-    # Initate DHCP request on every interface in the list.  Stop after
-    # one works.
-
-    for i in $intf_list ; do
-        log_debug_msg "Trying DHCPv4 on interface: $i"
-        tmp=$(udhcpc $udhcp_args $udhcp_request_opts -i $i -s /lib/onie/udhcp4_sd) && onie_disco="${onie_disco}${tmp##*ONIE_PARMS:}"
-    done
-
-    if [ -n "$onie_disco" ] ; then
-        return 0
-    fi
-
-    return 1
-}
-
-cd onie/build-config
-make MACHINE=kvm_x86_64 all
-# this can take as long as three hours
-# sftp onie/build
+    cp $ONIEVAGRANTDIR/build/discover $ONIEDIR/rootconf/default/bin/discover
+    cp $ONIEVAGRANTDIR/build/.depend.boot $ONIEDIR/rootconf/default/etc/init.d
+    cp $ONIEVAGRANTDIR/build/.depend.start $ONIEDIR/rootconf/default/etc/init.d
+    cd $ONIEDIR/build-config
+    make MACHINE=kvm_x86_64 all
+    # this can take as long as three hours
+    # sftp onie/build
 
 
 IN VIRTUALBOX
