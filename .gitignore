@@ -1,2 +1,3 @@
 onie-installer
 *.box
+.vagrant/*
