@@ -15,6 +15,13 @@ Vagrant.configure("2") do |config|
         # Disable the synched folder. It doesn't work.
         device.vm.synced_folder ".", "/vagrant", disabled: true
 
+        # Disable the secure Vagrant key. This makes the demos easier to run
+        # since installing an OS will wipe the key off of ONIE.
+        # If you set this to true, you can get the value of the public key by
+        # running:
+        # ssh-keygen -y -f .vagrant/machines/leaf01/virtualbox/private_key
+        config.ssh.insert_key = false
+
 
         # Device parameters. The default memory is 1G, which is necessary
         # to run onie-nos-install
@@ -24,7 +31,8 @@ Vagrant.configure("2") do |config|
 
             # If you want to watch ONIE do its thing, you'll need to set up
             # a serial connection. The arguments here should not be changed,
-            # except for the port number.
+            # except for the port number. This feature requires Virtualbox 5 or
+            # later.
             vbox.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
             vbox.customize ["modifyvm", :id, "--uartmode1", "tcpserver", "40011"]
         end
