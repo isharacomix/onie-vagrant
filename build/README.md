@@ -22,14 +22,16 @@ IN VIRTUALBOX
 
 IN
 VBoxManage list vms
-vagrant package --base 5c458a2a-51ad-4091-bb40-e892b49fad05 --output onie.box
+vagrant package --base 79c8880e-ca9d-4245-a8f4-07964ac4c24e --output onie.box
 vagrant box add onie.box --name onie
 nano ~/.vagrant.d/boxes/onie/0/virtualbox/Vagrantfile
 
 # include these defaults
     config.ssh.username = "root"
     config.ssh.shell = "sh"
-    config.vm.synced_folder ".", "/vagrant", disabled: true
+    config.ssh.sudo_command = "%c"
+
+
 
 
 vbox.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]

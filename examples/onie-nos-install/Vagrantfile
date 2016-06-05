@@ -12,6 +12,10 @@ Vagrant.configure("2") do |config|
         # The source of the box on hashicorp atlas
         device.vm.box = "isharacomix/onie"
 
+        # Disable the synched folder. It doesn't work.
+        device.vm.synced_folder ".", "/vagrant", disabled: true
+
+
         # Device parameters. The default memory is 1G, which is necessary
         # to run onie-nos-install
         device.vm.provider "virtualbox" do |vbox|
