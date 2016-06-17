@@ -29,6 +29,7 @@ You will need two terminals.
     vagrant scp onie-installer leaf01:/root/onie-installer
     vagrant scp onie-installer.preseed leaf01:/root/onie-installer.preseed
     vagrant ssh leaf01
+    su root
     onie-nos-install onie-installer
 
 
