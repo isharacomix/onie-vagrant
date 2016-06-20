@@ -26,6 +26,7 @@ Vagrant.configure("2") do |config|
         # NIC configuration - ensure that all devices other than 1 are promiscuous.
         device.vm.provider "virtualbox" do |vbox|
           vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+          vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
           vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
         end
       end
@@ -46,7 +47,7 @@ Vagrant.configure("2") do |config|
         end
 
         # Network definitions
-        device.vm.network "private_network", virtualbox__intnet: "oobnet", auto_config: false , :mac => "A00000000011"
+        device.vm.network "private_network", virtualbox__intnet: "oobnet", auto_config: false , :mac => "443839110000"
 
         # NIC configuration - ensure that all devices other than 1 are promiscuous.
         device.vm.provider "virtualbox" do |vbox|

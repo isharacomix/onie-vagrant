@@ -2,7 +2,8 @@ dhcp-install Example
 ====================
 In this example, we'll be spinning up a white box switch running ONIE and
 attaching its management interface to an out of band management network where
-it will be receiving DHCP options and the ONIE installer image.
+it will be receiving DHCP options and the ONIE installer image.  This demo should
+be completed after you have completed `onie-nos-install`.
 
 Prerequisites
 ------------

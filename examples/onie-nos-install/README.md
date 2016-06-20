@@ -2,6 +2,8 @@ onie-nos-install Example
 ========================
 In this example, we'll be spinning up a white box switch running ONIE, copying
 our ONIE installer image to the switch, and installing the image manually.
+This demo is a great starting point before attempting either `dhcp-install`
+or `spine-leaf`.
 
 Prerequisites
 ------------
