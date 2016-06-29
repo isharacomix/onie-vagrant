@@ -12,8 +12,8 @@ d-i preseed/late_command string \
     echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:12:00:51", NAME="swp51", SUBSYSTEMS=="pci"' >> /target/etc/udev/rules.d/70-persistent-net.rules; \
     echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:12:00:52", NAME="swp52", SUBSYSTEMS=="pci"' >> /target/etc/udev/rules.d/70-persistent-net.rules; \
     echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:21:00:01", NAME="swp1", SUBSYSTEMS=="pci"' >> /target/etc/udev/rules.d/70-persistent-net.rules; \
-    echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:22:00:02", NAME="swp2", SUBSYSTEMS=="pci"' >> /target/etc/udev/rules.d/70-persistent-net.rules; \
-    echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:21:00:01", NAME="swp1", SUBSYSTEMS=="pci"' >> /target/etc/udev/rules.d/70-persistent-net.rules; \
+    echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:21:00:02", NAME="swp2", SUBSYSTEMS=="pci"' >> /target/etc/udev/rules.d/70-persistent-net.rules; \
+    echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:22:00:01", NAME="swp1", SUBSYSTEMS=="pci"' >> /target/etc/udev/rules.d/70-persistent-net.rules; \
     echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:22:00:02", NAME="swp2", SUBSYSTEMS=="pci"' >> /target/etc/udev/rules.d/70-persistent-net.rules; \
     mkdir -p /target/home/vagrant/.ssh ;\
     echo 'vagrant:x:1001:1001::/home/vagrant:/bin/bash' >> /target/etc/passwd; \
