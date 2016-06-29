@@ -75,3 +75,8 @@ the switch after the installation completes (as opposed to the preseed file
 that takes effect right before the installation completes). ZTP is often used
 to do things such as configure basic networking, install automation tool
 agents (such as Puppet or Chef), set up SSH keys, and so on.
+
+Next Steps
+----------
+You should now be ready to try the `spine-leaf` demo. Use `vagrant destroy -f`
+to tear down the topology before moving to the next demo.

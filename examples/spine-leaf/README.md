@@ -33,7 +33,12 @@ Usage
     sudo service isc-dhcp-server restart
     exit
     vagrant up leaf01 leaf02 spine01 spine02
-
+    # get a coffee while onie installation happens in the background.
+    vagrant ssh mgmtserver
+    ssh cumulus@192.168.0.11
+    # password is CumulusLinux!
+    # if you can't get in, wait a bit longer until installation occurs
+    sudo lldpcli show neighbors
 
 What's happening?
 -----------------
@@ -47,7 +52,7 @@ changes in the Vagrantfile and preseed file.
 
 Here you will notice that we are creating some new virtual networks. In order
 to simulate connecting two devices, we create a private network that contains
-two interfaces.
+two interfaces. Each cable is given a unique network name.
 
         +------------+       +------------+
         | spine01    |       | spine02    |
@@ -95,4 +100,23 @@ in a zero touch provisioning script.
 
 When it comes to making virtual topologies of any meaningful complexity, it
 becomes necessary to automatically generate the Vagrantfile and preseed file
-to avoid making mistakes in building the topology. 
+to avoid making mistakes in building the topology.
+
+Next Steps
+----------
+You should now have the skills to develop your own Vagrantfile and preseed
+file to simulate any topology. The key things to remember when making these
+files:
+
+ * You need to make sure that there are no overlapping networks when you
+   create your Vagrantfile. Draw out your topology before you create the
+   Vagrantfile and number each cable to ensure that the networks are
+   unique.
+ * Your preseed file needs to include the udev rules for all devices. You
+   can either generate these mac addresses using a technique like we used
+   in this example or draw them from some other ground truth.
+ * If you are working with servers, you can install the udev rules file
+   on the device directly in the Vagrantfile.
+ * If you don't want eth0 to be controlled by Vagrant, you can create a
+   udev rule that sets that eth0 interface to a name like "dummy" and then
+   set eth1 to eth0.

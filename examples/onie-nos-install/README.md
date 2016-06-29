@@ -54,3 +54,9 @@ Cumulus Linux will be installed in the default GRUB slot.
 
 To log into Cumulus Linux, the default username is `cumulus` and the password
 is `CumulusLinux!`.
+
+
+Next Steps
+----------
+You should now be ready to try the `dhcp-install` demo. Use `vagrant destroy -f`
+to tear down the topology before moving to the next demo.

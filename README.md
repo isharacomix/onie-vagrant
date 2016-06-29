@@ -46,3 +46,17 @@ Choose a desired version (starting at 3.0.0) and download the Cumulus VX
 binary image.
 
 ![](onie-vx.png)
+
+Running the Examples
+--------------------
+There are three examples.
+
+ * **onie-nos-install**: Do this demo first. This shows a manual installation
+   of Cumulus Linux by putting the `onie-installer` image directly on the
+   device.
+ * **dhcp-install**: Do this demo second. This shows how to do an unattended
+   installation of Cumulus Linux on an ONIE switch using DHCP and Apache.
+ * **spine-leaf**: Do this demo last. This shows an unattended installation
+   of Cumulus Linux across a two-tier CLOS topology. Explains everything needed
+   to build Vagrantfiles, preseed files, and configuration needed to create
+   custom topologies.
