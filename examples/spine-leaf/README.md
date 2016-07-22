@@ -18,7 +18,7 @@ From the [README](http://github.com/isharacomix/onie-vagrant)
 
 Usage
 -----
-    cd onie-vagrant/examples/dhcp-install
+    cd onie-vagrant/examples/spine-leaf
     vagrant up mgmtserver
     vagrant scp var mgmtserver:.
     vagrant scp etc mgmtserver:.
