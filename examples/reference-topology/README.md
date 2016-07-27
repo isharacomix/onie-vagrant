@@ -32,10 +32,10 @@ Usage
     sudo ifup eth1
     sudo service isc-dhcp-server restart
     exit
-    vagrant up leaf01 leaf02 spine01 spine02
+    vagrant up leaf01 leaf02 leaf03 leaf04 spine01 spine02 server01 server02
     # get a coffee while onie installation happens in the background.
     vagrant ssh mgmtserver
-    ssh cumulus@leaf01
+    ssh cumulus@192.168.0.11
     # password is CumulusLinux!
     # if you can't get in, wait a bit longer until installation occurs
     sudo lldpcli show neighbors

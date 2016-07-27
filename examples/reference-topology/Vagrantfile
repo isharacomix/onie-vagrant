@@ -1,0 +1,208 @@
+Vagrant.configure("2") do |config|
+    wbid = 1
+    offset = 0
+
+    config.vm.provider "virtualbox" do |v|
+    v.gui=false
+    end
+
+    ##### DEFINE VM for oob-mgmt-server #####
+    config.vm.define "oob-mgmt-server" do |device|
+        device.vm.hostname = "oob-mgmt-server"
+        device.vm.box = "boxcutter/ubuntu1404"
+
+        device.vm.provider "virtualbox" do |v|
+            v.name = "#{wbid}_oob-mgmt-server"
+            v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+            v.memory = 1024
+        end
+        device.vm.synced_folder ".", "/vagrant", disabled: true
+        # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
+        device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
+
+        # link for eth1 --> oob-mgmt-switch:swp1
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net54", auto_config: false , :mac => "44383900005F"
+
+
+        device.vm.provider "virtualbox" do |vbox|
+            vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+            vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+        end
+
+        # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+        device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
+        # Run Any Extra Config
+        device.vm.provision :shell , path: "./helper_scripts/config_oob_server.sh"
+    end
+
+
+
+    ##### DEFINE VM for server01 #####
+    config.vm.define "server01" do |device|
+        device.vm.hostname = "server01"
+        device.vm.box = "boxcutter/ubuntu1404"
+
+        device.vm.provider "virtualbox" do |v|
+          v.name = "#{wbid}_server01"
+          v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+          v.memory = 512
+        end
+        device.vm.synced_folder ".", "/vagrant", disabled: true
+          # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
+          device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
+
+          # link for eth0 --> oob-mgmt-switch:swp2
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net42", auto_config: false , :mac => "443839310000"
+
+          # link for eth1 --> leaf01:swp1
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net2", auto_config: false , :mac => "443839310001"
+
+          # link for eth2 --> leaf02:swp1
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net13", auto_config: false , :mac => "443839310002"
+
+
+        device.vm.provider "virtualbox" do |vbox|
+          vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+
+          vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+        end
+
+          # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+          device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
+          # Run Any Extra Config
+          device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
+
+    end
+
+    ##### DEFINE VM for server02 #####
+    config.vm.define "server02" do |device|
+      device.vm.hostname = "server02"
+      device.vm.box = "boxcutter/ubuntu1404"
+
+      device.vm.provider "virtualbox" do |v|
+        v.name = "#{wbid}_server02"
+        v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+        v.memory = 512
+      end
+      device.vm.synced_folder ".", "/vagrant", disabled: true
+        # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
+        device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
+
+        # link for eth0 --> oob-mgmt-switch:swp3
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net47", auto_config: false , :mac => "443839320000"
+
+        # link for eth1 --> leaf01:swp2
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net12", auto_config: false , :mac => "443839320001"
+
+        # link for eth2 --> leaf02:swp2
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net15", auto_config: false , :mac => "443839320002"
+
+
+      device.vm.provider "virtualbox" do |vbox|
+        vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+
+        vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+      end
+
+        # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+        device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
+        # Run Any Extra Config
+        device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
+    end
+
+    ##### DEFINE VM for server03 #####
+    config.vm.define "server03" do |device|
+       device.vm.hostname = "server03"
+       device.vm.box = "boxcutter/ubuntu1404"
+
+       device.vm.provider "virtualbox" do |v|
+         v.name = "#{wbid}_server03"
+         v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+         v.memory = 512
+       end
+       device.vm.synced_folder ".", "/vagrant", disabled: true
+         # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
+         device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
+
+         # link for eth0 --> oob-mgmt-switch:swp4
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net3", auto_config: false , :mac => "443839330000"
+
+         # link for eth1 --> leaf03:swp1
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net22", auto_config: false , :mac => "443839330001"
+
+         # link for eth2 --> leaf04:swp1
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net57", auto_config: false , :mac => "443839330002"
+
+
+       device.vm.provider "virtualbox" do |vbox|
+         vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+         vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
+         vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+
+         vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+       end
+
+         # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+         device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
+         # Run Any Extra Config
+         device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
+    end
+
+    ##### DEFINE VM for server04 #####
+    config.vm.define "server04" do |device|
+      device.vm.hostname = "server04"
+      device.vm.box = "boxcutter/ubuntu1404"
+
+      device.vm.provider "virtualbox" do |v|
+        v.name = "#{wbid}_server04"
+        v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+        v.memory = 512
+      end
+      device.vm.synced_folder ".", "/vagrant", disabled: true
+        # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
+        device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
+
+        # link for eth0 --> oob-mgmt-switch:swp5
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net49", auto_config: false , :mac => "443839340000"
+
+        # link for eth1 --> leaf03:swp2
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net19", auto_config: false , :mac => "443839340001"
+
+        # link for eth2 --> leaf04:swp2
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net27", auto_config: false , :mac => "443839340002"
+
+
+      device.vm.provider "virtualbox" do |vbox|
+        vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+
+        vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+      end
+
+        # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+        device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
+        # Run Any Extra Config
+        device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
+
+
+
+        # Apply the interface re-map
+        device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
+
+
+    end
+
+
+
+
+end
