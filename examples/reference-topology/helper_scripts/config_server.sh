@@ -12,6 +12,29 @@ sudo su
 echo -e "auto lo" > /etc/network/interfaces
 echo -e "iface lo inet loopback\n\n" >> /etc/network/interfaces
 
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{ifindex}=="2", NAME="vagrant", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:31:00:00", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:31:00:01", NAME="eth1", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:31:00:02", NAME="eth2", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:31:00:03", NAME="eth3", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:31:00:04", NAME="eth4", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:32:00:00", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:32:00:01", NAME="eth1", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:32:00:02", NAME="eth2", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:32:00:03", NAME="eth3", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:32:00:04", NAME="eth4", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:33:00:00", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:33:00:01", NAME="eth1", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:33:00:02", NAME="eth2", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:33:00:03", NAME="eth3", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:33:00:04", NAME="eth4", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:34:00:00", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:34:00:01", NAME="eth1", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:34:00:02", NAME="eth2", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:34:00:03", NAME="eth3", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:34:00:04", NAME="eth4", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules; \
+
+
 #Add vagrant interface
 echo -e "\n\nauto eth0" >> /etc/network/interfaces
 echo -e "iface eth0 inet dhcp\n\n" >> /etc/network/interfaces
