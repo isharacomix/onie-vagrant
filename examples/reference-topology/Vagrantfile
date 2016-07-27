@@ -274,7 +274,7 @@ Vagrant.configure("2") do |config|
         device.vm.synced_folder ".", "/vagrant", disabled: true
 
           # link for eth0 --> oob-mgmt-switch:swp7
-          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net38", auto_config: false , :mac => "443839120000"
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839120000"
 
           # link for swp1 --> server01:eth2
           device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net13", auto_config: false , :mac => "443839120001"
@@ -337,7 +337,7 @@ Vagrant.configure("2") do |config|
         device.vm.synced_folder ".", "/vagrant", disabled: true
 
           # link for eth0 --> oob-mgmt-switch:swp8
-          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net28", auto_config: false , :mac => "443839130000"
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839130000"
 
           # link for swp1 --> server03:eth1
           device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net22", auto_config: false , :mac => "443839130001"
@@ -400,7 +400,7 @@ Vagrant.configure("2") do |config|
       device.vm.synced_folder ".", "/vagrant", disabled: true
 
         # link for eth0 --> oob-mgmt-switch:swp9
-        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net34", auto_config: false , :mac => "443839140000"
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839140000"
 
         # link for swp1 --> server03:eth2
         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net57", auto_config: false , :mac => "443839140001"
@@ -464,7 +464,7 @@ Vagrant.configure("2") do |config|
       device.vm.synced_folder ".", "/vagrant", disabled: true
 
         # link for eth0 --> oob-mgmt-switch:swp10
-        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net31", auto_config: false , :mac => "443839210000"
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839210000"
 
         # link for swp1 --> leaf01:swp51
         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net52", auto_config: false , :mac => "443839210001"
@@ -521,7 +521,7 @@ Vagrant.configure("2") do |config|
         device.vm.synced_folder ".", "/vagrant", disabled: true
 
           # link for eth0 --> oob-mgmt-switch:swp11
-          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net59", auto_config: false , :mac => "443839220000"
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839220000"
 
           # link for swp1 --> leaf01:swp52
           device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net23", auto_config: false , :mac => "443839220001"
