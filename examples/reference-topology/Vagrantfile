@@ -1,0 +1,568 @@
+Vagrant.configure("2") do |config|
+    wbid = 1
+    offset = 0
+
+    config.vm.provider "virtualbox" do |v|
+    v.gui=false
+    end
+
+    ##### DEFINE VM for oob-mgmt-server #####
+    config.vm.define "oob-mgmt-server" do |device|
+        device.vm.hostname = "oob-mgmt-server"
+        device.vm.box = "boxcutter/ubuntu1404"
+
+        device.vm.provider "virtualbox" do |v|
+            v.name = "#{wbid}_oob-mgmt-server"
+            v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+            v.memory = 1024
+        end
+        device.vm.synced_folder ".", "/vagrant", disabled: true
+        # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
+        device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
+
+        # link for eth1 --> oob-mgmt-switch:swp1
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "44383900005F"
+
+
+        device.vm.provider "virtualbox" do |vbox|
+            vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+            vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+        end
+
+        # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+        device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
+        # Run Any Extra Config
+        device.vm.provision :shell , path: "./helper_scripts/config_oob_server.sh"
+    end
+
+
+
+    ##### DEFINE VM for server01 #####
+    config.vm.define "server01" do |device|
+        device.vm.hostname = "server01"
+        device.vm.box = "boxcutter/ubuntu1404"
+
+        device.vm.provider "virtualbox" do |v|
+          v.name = "#{wbid}_server01"
+          v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+          v.memory = 512
+        end
+        device.vm.synced_folder ".", "/vagrant", disabled: true
+          # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
+          device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
+
+          # link for eth0 --> oob-mgmt-switch:swp2
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839310000"
+
+          # link for eth1 --> leaf01:swp1
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net2", auto_config: false , :mac => "443839310001"
+
+          # link for eth2 --> leaf02:swp1
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net13", auto_config: false , :mac => "443839310002"
+
+
+        device.vm.provider "virtualbox" do |vbox|
+          vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+
+          vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+        end
+
+          # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+          device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
+          # Run Any Extra Config
+          device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
+
+    end
+
+    ##### DEFINE VM for server02 #####
+    config.vm.define "server02" do |device|
+      device.vm.hostname = "server02"
+      device.vm.box = "boxcutter/ubuntu1404"
+
+      device.vm.provider "virtualbox" do |v|
+        v.name = "#{wbid}_server02"
+        v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+        v.memory = 512
+      end
+      device.vm.synced_folder ".", "/vagrant", disabled: true
+        # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
+        device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
+
+        # link for eth0 --> oob-mgmt-switch:swp3
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839320000"
+
+        # link for eth1 --> leaf01:swp2
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net12", auto_config: false , :mac => "443839320001"
+
+        # link for eth2 --> leaf02:swp2
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net15", auto_config: false , :mac => "443839320002"
+
+
+      device.vm.provider "virtualbox" do |vbox|
+        vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+
+        vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+      end
+
+        # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+        device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
+        # Run Any Extra Config
+        device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
+    end
+
+    ##### DEFINE VM for server03 #####
+    config.vm.define "server03" do |device|
+       device.vm.hostname = "server03"
+       device.vm.box = "boxcutter/ubuntu1404"
+
+       device.vm.provider "virtualbox" do |v|
+         v.name = "#{wbid}_server03"
+         v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+         v.memory = 512
+       end
+       device.vm.synced_folder ".", "/vagrant", disabled: true
+         # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
+         device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
+
+         # link for eth0 --> oob-mgmt-switch:swp4
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839330000"
+
+         # link for eth1 --> leaf03:swp1
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net22", auto_config: false , :mac => "443839330001"
+
+         # link for eth2 --> leaf04:swp1
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net57", auto_config: false , :mac => "443839330002"
+
+
+       device.vm.provider "virtualbox" do |vbox|
+         vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+         vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
+         vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+
+         vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+       end
+
+         # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+         device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
+         # Run Any Extra Config
+         device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
+    end
+
+    ##### DEFINE VM for server04 #####
+    config.vm.define "server04" do |device|
+      device.vm.hostname = "server04"
+      device.vm.box = "boxcutter/ubuntu1404"
+
+      device.vm.provider "virtualbox" do |v|
+        v.name = "#{wbid}_server04"
+        v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+        v.memory = 512
+      end
+      device.vm.synced_folder ".", "/vagrant", disabled: true
+        # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
+        device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
+
+        # link for eth0 --> oob-mgmt-switch:swp5
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839340000"
+
+        # link for eth1 --> leaf03:swp2
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net19", auto_config: false , :mac => "443839340001"
+
+        # link for eth2 --> leaf04:swp2
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net27", auto_config: false , :mac => "443839340002"
+
+
+      device.vm.provider "virtualbox" do |vbox|
+        vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+
+        vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+      end
+
+        # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+        device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
+        # Run Any Extra Config
+        device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
+    end
+
+
+
+
+    ##### DEFINE VM for leaf01 #####
+    config.vm.define "leaf01" do |device|
+       device.vm.box = "isharacomix/onie"
+       config.ssh.insert_key = false
+       device.vm.provider "virtualbox" do |v|
+         v.name = "#{wbid}_leaf01"
+         v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+         v.memory = 512
+       end
+       device.vm.synced_folder ".", "/vagrant", disabled: true
+
+         # link for eth0 --> oob-mgmt-switch:swp6
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839110000"
+
+         # link for swp1 --> server01:eth1
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net2", auto_config: false , :mac => "443839110001"
+
+         # link for swp2 --> server02:eth1
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net12", auto_config: false , :mac => "443839110002"
+
+         # link for swp45 --> leaf01:swp46
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net18", auto_config: false , :mac => "443839110045"
+
+         # link for swp46 --> leaf01:swp45
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net18", auto_config: false , :mac => "443839110046"
+
+         # link for swp47 --> leaf01:swp48
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net41", auto_config: false , :mac => "443839110047"
+
+         # link for swp48 --> leaf01:swp47
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net41", auto_config: false , :mac => "443839110048"
+
+         # link for swp49 --> leaf02:swp49
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net10", auto_config: false , :mac => "443839110049"
+
+         # link for swp50 --> leaf02:swp50
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net1", auto_config: false , :mac => "443839110050"
+
+         # link for swp51 --> spine01:swp1
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net52", auto_config: false , :mac => "443839110051"
+
+         # link for swp52 --> spine02:swp1
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net23", auto_config: false , :mac => "443839110052"
+
+
+       device.vm.provider "virtualbox" do |vbox|
+         vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+         vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
+         vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+         vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-vms']
+         vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-vms']
+         vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-vms']
+         vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-vms']
+         vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-vms']
+         vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
+         vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-vms']
+         vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-vms']
+
+         vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+       end
+
+    end
+
+
+      ##### DEFINE VM for leaf02 #####
+      config.vm.define "leaf02" do |device|
+        device.vm.box = "isharacomix/onie"
+        config.ssh.insert_key = false
+        device.vm.provider "virtualbox" do |v|
+          v.name = "#{wbid}_leaf02"
+          v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+          v.memory = 512
+        end
+        device.vm.synced_folder ".", "/vagrant", disabled: true
+
+          # link for eth0 --> oob-mgmt-switch:swp7
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839120000"
+
+          # link for swp1 --> server01:eth2
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net13", auto_config: false , :mac => "443839120001"
+
+          # link for swp2 --> server02:eth2
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net15", auto_config: false , :mac => "443839120002"
+
+          # link for swp45 --> leaf02:swp46
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net8", auto_config: false , :mac => "443839120045"
+
+          # link for swp46 --> leaf02:swp45
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net8", auto_config: false , :mac => "443839120046"
+
+          # link for swp47 --> leaf02:swp48
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net55", auto_config: false , :mac => "443839120047"
+
+          # link for swp48 --> leaf02:swp47
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net55", auto_config: false , :mac => "443839120048"
+
+          # link for swp49 --> leaf01:swp49
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net10", auto_config: false , :mac => "443839120049"
+
+          # link for swp50 --> leaf01:swp50
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net1", auto_config: false , :mac => "443839120050"
+
+          # link for swp51 --> spine01:swp2
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net25", auto_config: false , :mac => "443839120051"
+
+          # link for swp52 --> spine02:swp2
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net58", auto_config: false , :mac => "443839120052"
+
+
+        device.vm.provider "virtualbox" do |vbox|
+          vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-vms']
+
+          vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+        end
+    end
+
+
+      ##### DEFINE VM for leaf03 #####
+      config.vm.define "leaf03" do |device|
+        device.vm.box = "isharacomix/onie"
+        config.ssh.insert_key = false
+        device.vm.provider "virtualbox" do |v|
+          v.name = "#{wbid}_leaf03"
+          v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+          v.memory = 512
+        end
+        device.vm.synced_folder ".", "/vagrant", disabled: true
+
+          # link for eth0 --> oob-mgmt-switch:swp8
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839130000"
+
+          # link for swp1 --> server03:eth1
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net22", auto_config: false , :mac => "443839130001"
+
+          # link for swp2 --> server04:eth1
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net19", auto_config: false , :mac => "443839130002"
+
+          # link for swp45 --> leaf03:swp46
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net26", auto_config: false , :mac => "443839130045"
+
+          # link for swp46 --> leaf03:swp45
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net26", auto_config: false , :mac => "443839130046"
+
+          # link for swp47 --> leaf03:swp48
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net51", auto_config: false , :mac => "443839130047"
+
+          # link for swp48 --> leaf03:swp47
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net51", auto_config: false , :mac => "443839130048"
+
+          # link for swp49 --> leaf04:swp49
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net29", auto_config: false , :mac => "443839130049"
+
+          # link for swp50 --> leaf04:swp50
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net4", auto_config: false , :mac => "443839130050"
+
+          # link for swp51 --> spine01:swp3
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net50", auto_config: false , :mac => "443839130051"
+
+          # link for swp52 --> spine02:swp3
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net17", auto_config: false , :mac => "443839130052"
+
+
+        device.vm.provider "virtualbox" do |vbox|
+          vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-vms']
+
+          vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+        end
+    end
+
+
+    ##### DEFINE VM for leaf04 #####
+    config.vm.define "leaf04" do |device|
+      device.vm.box = "isharacomix/onie"
+      config.ssh.insert_key = false
+      device.vm.provider "virtualbox" do |v|
+        v.name = "#{wbid}_leaf04"
+        v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+        v.memory = 512
+      end
+      device.vm.synced_folder ".", "/vagrant", disabled: true
+
+        # link for eth0 --> oob-mgmt-switch:swp9
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839140000"
+
+        # link for swp1 --> server03:eth2
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net57", auto_config: false , :mac => "443839140001"
+
+        # link for swp2 --> server04:eth2
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net27", auto_config: false , :mac => "443839140002"
+
+        # link for swp45 --> leaf04:swp46
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net16", auto_config: false , :mac => "443839140045"
+
+        # link for swp46 --> leaf04:swp45
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net16", auto_config: false , :mac => "443839140046"
+
+        # link for swp47 --> leaf04:swp48
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net32", auto_config: false , :mac => "443839140047"
+
+        # link for swp48 --> leaf04:swp47
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net32", auto_config: false , :mac => "443839140048"
+
+        # link for swp49 --> leaf03:swp49
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net29", auto_config: false , :mac => "443839140049"
+
+        # link for swp50 --> leaf03:swp50
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net4", auto_config: false , :mac => "443839140050"
+
+        # link for swp51 --> spine01:swp4
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net37", auto_config: false , :mac => "443839140051"
+
+        # link for swp52 --> spine02:swp4
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net44", auto_config: false , :mac => "443839140052"
+
+
+      device.vm.provider "virtualbox" do |vbox|
+        vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-vms']
+
+        vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+      end
+
+  end
+
+
+  ##### DEFINE VM for spine01 #####
+    config.vm.define "spine01" do |device|
+      device.vm.box = "isharacomix/onie"
+      config.ssh.insert_key = false
+      device.vm.provider "virtualbox" do |v|
+        v.name = "#{wbid}_spine01"
+        v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+        v.memory = 512
+      end
+      device.vm.synced_folder ".", "/vagrant", disabled: true
+
+        # link for eth0 --> oob-mgmt-switch:swp10
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839210000"
+
+        # link for swp1 --> leaf01:swp51
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net52", auto_config: false , :mac => "443839210001"
+
+        # link for swp2 --> leaf02:swp51
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net25", auto_config: false , :mac => "443839210002"
+
+        # link for swp3 --> leaf03:swp51
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net50", auto_config: false , :mac => "443839210003"
+
+        # link for swp4 --> leaf04:swp51
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net37", auto_config: false , :mac => "443839210004"
+
+        # link for swp29 --> exit02:swp51
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net21", auto_config: false , :mac => "443839210029"
+
+        # link for swp30 --> exit01:swp51
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net6", auto_config: false , :mac => "443839210030"
+
+        # link for swp31 --> spine02:swp31
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net45", auto_config: false , :mac => "443839210031"
+
+        # link for swp32 --> spine02:swp32
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net36", auto_config: false , :mac => "443839210032"
+
+
+      device.vm.provider "virtualbox" do |vbox|
+        vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-vms']
+        vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
+
+        vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+      end
+
+
+  end
+
+
+      ##### DEFINE VM for spine02 #####
+      config.vm.define "spine02" do |device|
+        device.vm.box = "isharacomix/onie"
+        config.ssh.insert_key = false
+        device.vm.provider "virtualbox" do |v|
+          v.name = "#{wbid}_spine02"
+          v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+          v.memory = 512
+        end
+        device.vm.synced_folder ".", "/vagrant", disabled: true
+
+          # link for eth0 --> oob-mgmt-switch:swp11
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839220000"
+
+          # link for swp1 --> leaf01:swp52
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net23", auto_config: false , :mac => "443839220001"
+
+          # link for swp2 --> leaf02:swp52
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net58", auto_config: false , :mac => "443839220002"
+
+          # link for swp3 --> leaf03:swp52
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net17", auto_config: false , :mac => "443839220003"
+
+          # link for swp4 --> leaf04:swp52
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net44", auto_config: false , :mac => "443839220004"
+
+          # link for swp29 --> exit02:swp52
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net53", auto_config: false , :mac => "443839220029"
+
+          # link for swp30 --> exit01:swp52
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net56", auto_config: false , :mac => "443839220030"
+
+          # link for swp31 --> spine01:swp31
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net45", auto_config: false , :mac => "443839220031"
+
+          # link for swp32 --> spine01:swp32
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net36", auto_config: false , :mac => "443839220032"
+
+
+        device.vm.provider "virtualbox" do |vbox|
+          vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-vms']
+          vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
+
+          vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+        end
+
+    end
+
+
+end

@@ -1,0 +1,5 @@
+127.0.0.1   localhost
+
+192.168.0.254 oob-mgmt-server.lab.local oob-mgmt-server
+
+192.168.0.11 leaf01.lab.local leaf01

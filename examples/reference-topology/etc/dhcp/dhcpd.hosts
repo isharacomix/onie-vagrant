@@ -1,0 +1,65 @@
+# Here we statically assign DHCP entries according to the eth0 mac addresses of
+# our devices.
+#
+host leaf01 {
+  hardware ethernet 44:38:39:11:00:00;
+  fixed-address 192.168.0.11;
+  option host-name "leaf01";
+  option default-url ="http://192.168.0.254/onie-installer";
+  option cumulus-provision-url ="http://192.168.0.254/ztp.sh";
+}
+host leaf02 {
+  hardware ethernet 44:38:39:12:00:00;
+  fixed-address 192.168.0.12;
+  option host-name "leaf02";
+  option default-url ="http://192.168.0.254/onie-installer";
+  option cumulus-provision-url ="http://192.168.0.254/ztp.sh";
+}
+host leaf03 {
+  hardware ethernet 44:38:39:13:00:00;
+  fixed-address 192.168.0.13;
+  option host-name "leaf03";
+  option default-url ="http://192.168.0.254/onie-installer";
+  option cumulus-provision-url ="http://192.168.0.254/ztp.sh";
+}
+host leaf04 {
+  hardware ethernet 44:38:39:14:00:00;
+  fixed-address 192.168.0.14;
+  option host-name "leaf04";
+  option default-url ="http://192.168.0.254/onie-installer";
+  option cumulus-provision-url ="http://192.168.0.254/ztp.sh";
+}
+host spine01 {
+  hardware ethernet 44:38:39:21:00:00;
+  fixed-address 192.168.0.21;
+  option host-name "spine01";
+  option default-url ="http://192.168.0.254/onie-installer";
+  option cumulus-provision-url ="http://192.168.0.254/ztp.sh";
+}
+host spine02 {
+  hardware ethernet 44:38:39:22:00:00;
+  fixed-address 192.168.0.22;
+  option host-name "spine02";
+  option default-url ="http://192.168.0.254/onie-installer";
+  option cumulus-provision-url ="http://192.168.0.254/ztp.sh";
+}
+host server01 {
+  hardware ethernet 44:38:39:31:00:00;
+  fixed-address 192.168.0.31;
+  option host-name "server01";
+}
+host server02 {
+  hardware ethernet 44:38:39:32:00:00;
+  fixed-address 192.168.0.32;
+  option host-name "server02";
+}
+host server03 {
+  hardware ethernet 44:38:39:33:00:00;
+  fixed-address 192.168.0.33;
+  option host-name "server03";
+}
+host server04 {
+  hardware ethernet 44:38:39:34:00:00;
+  fixed-address 192.168.0.34;
+  option host-name "server04";
+}

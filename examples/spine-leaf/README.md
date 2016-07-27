@@ -26,6 +26,7 @@ Usage
     vagrant ssh mgmtserver
     sudo apt-get update
     sudo apt-get install -qy apache2 isc-dhcp-server
+    sudo cp ./etc/hosts /etc/hosts
     sudo cp ./etc/network/interfaces /etc/network
     sudo cp ./etc/dhcp/* /etc/dhcp
     sudo cp ./var/www/html/* /var/www/html
@@ -35,7 +36,7 @@ Usage
     vagrant up leaf01 leaf02 spine01 spine02
     # get a coffee while onie installation happens in the background.
     vagrant ssh mgmtserver
-    ssh cumulus@192.168.0.11
+    ssh cumulus@leaf01
     # password is CumulusLinux!
     # if you can't get in, wait a bit longer until installation occurs
     sudo lldpcli show neighbors

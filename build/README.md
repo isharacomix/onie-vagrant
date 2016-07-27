@@ -18,6 +18,7 @@ To build the onie image:
 
 IN VIRTUALBOX
  * Create with a SATA controller image for the hard drive
+ * Set the chipset to ICH9
  * Console in, embed, delete cd drive, reset serial console to default
  * Boxify
 
@@ -29,7 +30,10 @@ IN
     vagrant package --base 6853b0cc-566f-481b-b8d8-a7f0e0f97325 --output onie.box
     vagrant box add onie.box --name onie
     nano ~/.vagrant.d/boxes/onie/0/virtualbox/Vagrantfile
+    vagrant box repackage onie virtualbox 0
+    vagrant box remove onie virtualbox 0
 
     # include these defaults
-        config.ssh.username = "root"
         config.ssh.shell = "sh"
+
+    vagrant 

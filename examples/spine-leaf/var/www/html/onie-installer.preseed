@@ -7,6 +7,7 @@ d-i preseed/late_command string \
     echo 'iface eth0 inet dhcp' >> /target/etc/network/interfaces; \
     echo 'auto eth1' >> /target/etc/network/interfaces; \
     echo 'iface eth1 inet dhcp' >> /target/etc/network/interfaces; \
+    echo '' > /target/etc/udev/rules.d/70-persistent-net.rules; \
     echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:11:00:51", NAME="swp51", SUBSYSTEMS=="pci"' >> /target/etc/udev/rules.d/70-persistent-net.rules; \
     echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:11:00:52", NAME="swp52", SUBSYSTEMS=="pci"' >> /target/etc/udev/rules.d/70-persistent-net.rules; \
     echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:12:00:51", NAME="swp51", SUBSYSTEMS=="pci"' >> /target/etc/udev/rules.d/70-persistent-net.rules; \

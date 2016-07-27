@@ -1,0 +1,14 @@
+127.0.0.1   localhost
+
+192.168.0.254 oob-mgmt-server.lab.local oob-mgmt-server
+
+192.168.0.14 leaf04.lab.local leaf04
+192.168.0.13 leaf03.lab.local leaf03
+192.168.0.12 leaf02.lab.local leaf02
+192.168.0.11 leaf01.lab.local leaf01
+192.168.0.22 spine02.lab.local spine02
+192.168.0.21 spine01.lab.local spine01
+192.168.0.34 server04.lab.local server04
+192.168.0.33 server03.lab.local server03
+192.168.0.32 server02.lab.local server02
+192.168.0.31 server01.lab.local server01

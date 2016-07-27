@@ -34,6 +34,7 @@ You will need two terminals.
     vagrant ssh mgmtserver
     sudo apt-get update
     sudo apt-get install -qy apache2 isc-dhcp-server
+    sudo cp ./etc/hosts /etc/hosts
     sudo cp ./etc/network/interfaces /etc/network
     sudo cp ./etc/dhcp/* /etc/dhcp
     sudo cp ./var/www/html/* /var/www/html
