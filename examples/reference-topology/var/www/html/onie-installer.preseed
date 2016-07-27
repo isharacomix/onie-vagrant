@@ -354,4 +354,4 @@ d-i preseed/late_command string \
     sync; \
     in-target chmod 700 -R /home/vagrant/.ssh; \
     in-target chown vagrant:vagrant -R /home/vagrant/; \
-    sync; \
+    sync;
