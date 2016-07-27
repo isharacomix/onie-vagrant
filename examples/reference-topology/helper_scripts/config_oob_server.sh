@@ -68,9 +68,6 @@ ifup eth1
 sed "s/PasswordAuthentication no/PasswordAuthentication yes/" -i /etc/ssh/sshd_config
 service ssh restart
 
-sudo apt-get upgrade -q
-sudo apt-get install git
-
 
 echo "#################################"
 echo "   Finished"
