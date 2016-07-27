@@ -17,5 +17,10 @@ Usage
     exit
     vagrant up leaf01 leaf02 leaf03 leaf04 spine01 spine02 server01 server02
     # get a coffee while onie installation happens in the background.
+    # this can take nearly fifteen minutes.
     vagrant ssh oob-mgmt-server
     sudo su - cumulus
+
+From here, you can use any of the published
+[cldemos](https://github.com/CumulusNetworks/?utf8=%E2%9C%93&query=cldemo).
+Start from the command `sudo su - cumulus`.

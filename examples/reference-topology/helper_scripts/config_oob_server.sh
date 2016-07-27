@@ -12,6 +12,11 @@ cat <<EOF > /etc/network/interfaces
 auto lo
 iface lo inet loopback
 
+auto lo:0
+iface lo:0 inet static
+    address 192.168.0.1
+    netmask 255.255.255.0
+
 auto eth0
 iface eth0 inet dhcp
 
@@ -65,9 +70,12 @@ chown cumulus:cumulus -R /home/cumulus
 
 
 ifup eth1
+ifup lo:0
 sed "s/PasswordAuthentication no/PasswordAuthentication yes/" -i /etc/ssh/sshd_config
 service ssh restart
 
+sysctl -w net.ipv4.ip_forward=1
+/sbin/iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 
 echo "#################################"
 echo "   Finished"
