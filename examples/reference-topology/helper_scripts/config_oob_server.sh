@@ -15,7 +15,7 @@ iface lo inet loopback
 auto lo:0
 iface lo:0 inet static
     address 192.168.0.1
-    netmask 255.255.255.0
+    netmask 255.255.255.255
 
 auto eth0
 iface eth0 inet dhcp
