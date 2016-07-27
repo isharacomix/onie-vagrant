@@ -21,7 +21,7 @@ Vagrant.configure("2") do |config|
         device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
 
         # link for eth1 --> oob-mgmt-switch:swp1
-        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net54", auto_config: false , :mac => "44383900005F"
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "44383900005F"
 
 
         device.vm.provider "virtualbox" do |vbox|
@@ -53,7 +53,7 @@ Vagrant.configure("2") do |config|
           device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
 
           # link for eth0 --> oob-mgmt-switch:swp2
-          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net42", auto_config: false , :mac => "443839310000"
+          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839310000"
 
           # link for eth1 --> leaf01:swp1
           device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net2", auto_config: false , :mac => "443839310001"
@@ -93,7 +93,7 @@ Vagrant.configure("2") do |config|
         device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
 
         # link for eth0 --> oob-mgmt-switch:swp3
-        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net47", auto_config: false , :mac => "443839320000"
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839320000"
 
         # link for eth1 --> leaf01:swp2
         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net12", auto_config: false , :mac => "443839320001"
@@ -132,7 +132,7 @@ Vagrant.configure("2") do |config|
          device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
 
          # link for eth0 --> oob-mgmt-switch:swp4
-         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net3", auto_config: false , :mac => "443839330000"
+         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839330000"
 
          # link for eth1 --> leaf03:swp1
          device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net22", auto_config: false , :mac => "443839330001"
@@ -171,7 +171,7 @@ Vagrant.configure("2") do |config|
         device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
 
         # link for eth0 --> oob-mgmt-switch:swp5
-        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net49", auto_config: false , :mac => "443839340000"
+        device.vm.network "private_network", virtualbox__intnet: "#{wbid}_onet", auto_config: false , :mac => "443839340000"
 
         # link for eth1 --> leaf03:swp2
         device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net19", auto_config: false , :mac => "443839340001"
