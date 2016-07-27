@@ -193,13 +193,6 @@ Vagrant.configure("2") do |config|
 
         # Run Any Extra Config
         device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
-
-
-
-        # Apply the interface re-map
-        device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
-
-
     end
 
 

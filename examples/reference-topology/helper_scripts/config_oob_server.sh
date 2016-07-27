@@ -8,6 +8,20 @@ echo "#################################"
 sudo su
 
 
+cat <<EOF > /etc/network/interfaces
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet dhcp
+
+auto eth1
+iface eth1 inet static
+    address 192.168.0.254
+    netmask 255.255.0.0
+EOF
+
+
 useradd cumulus
 CUMULUS_HASH=`python -c 'import crypt; print(crypt.crypt("CumulusLinux!", "\$6\$saltsalt\$").replace("/","\\/"))'`
 sed "s/cumulus:!/cumulus:$CUMULUS_HASH/" -i /etc/shadow
