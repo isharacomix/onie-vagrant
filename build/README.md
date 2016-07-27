@@ -24,6 +24,7 @@ IN VIRTUALBOX
 
 
 IN
+    
     VBoxManage list vms
     vagrant package --base 6853b0cc-566f-481b-b8d8-a7f0e0f97325 --output onie.box
     vagrant box add onie.box --name onie
