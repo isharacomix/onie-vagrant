@@ -1,3 +1,5 @@
+Reference Topology
+==================
 
 
 Usage
@@ -16,10 +18,11 @@ Usage
     sudo service isc-dhcp-server restart
     exit
     vagrant up leaf01 leaf02 leaf03 leaf04 spine01 spine02 server01 server02
-    # get a coffee while onie installation happens in the background.
-    # this can take nearly fifteen minutes.
     vagrant ssh oob-mgmt-server
     sudo su - cumulus
+    ping leaf04
+    # when you see an interruption and then see the connection recover, that
+    # means that it's done. this can take about 25 minutes (around 2000 pings).
 
 From here, you can use any of the published
 [cldemos](https://github.com/CumulusNetworks/?utf8=%E2%9C%93&query=cldemo).
