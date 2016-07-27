@@ -1,6 +1,6 @@
 127.0.0.1   localhost
 
-192.168.0.254 oob-mgmt-server.lab.local oob-mgmt-server
+192.168.0.254 mgmtserver.lab.local mgmtserver
 
 192.168.0.14 leaf04.lab.local leaf04
 192.168.0.13 leaf03.lab.local leaf03
