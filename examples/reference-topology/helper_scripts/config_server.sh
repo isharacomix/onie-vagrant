@@ -57,6 +57,8 @@ chown cumulus:cumulus -R /home/cumulus
 sudo apt-get update -qy
 sudo apt-get install lldpd -qy
 
+# Reboot so udev takes effect
+reboot
 
 echo "#################################"
 echo "   Finished"
