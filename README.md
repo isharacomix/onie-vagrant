@@ -28,8 +28,8 @@ other platforms, read the
 I recommend installing the vagrant scp plugin as well to quickly move files on
 and off virtual machines.
 
-    wget https://releases.hashicorp.com/vagrant/1.8.1/vagrant_1.8.1_x86_64.deb
-    sudo dpkg -i vagrant_1.8.1_x86_64.deb
+    wget https://releases.hashicorp.com/vagrant/1.9.0/vagrant_1.9.0_x86_64.deb
+    sudo dpkg -i vagrant_1.9.0_x86_64.deb
     vagrant plugin install vagrant-scp
 
 
